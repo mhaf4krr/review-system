@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/qrcodejs/qrcode.js"></script>
+    <style> #qrcode > img {
+        margin:auto auto;
+        text-align:center;
+    } </style>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+     <script src="http://code.jquery.com/jquery-1.11.3.min.js" charset="utf-8"></script>
+    <script src="/qrcodejs/rater.js"></script>
+    
+</head>
+<body>
+
+   <section style="margin:auto auto;text-align:center">
+        <img src="/qrcodejs/logo.jpg" width="150px" alt="">
+        <h4>Scan the QR-CODE to Order.</h4>
+        <div id="qrcode">
+
+        </div>
+   </section>
+   <br>
+   <footer style="text-align:center">
+        <div style="text-align:center;margin:auto,auto;display:inline-block;color:gold;font-size:30px; " class="rate" data-rate-value=<%= info.rating%>></div>
+   <br>
+   <p>Rated <%= info.rating %> Stars by our customers. </p>
+   </footer>
+</body>
+<script src="/qrcodejs/socket.io.js"></script>
+<script>
+            window.onload = () =>{
+                 $(".rate").rate();
+            }
+            /* Initialize Socket */
+            var socket = io(window.location.href);
+            
+            socket.on('new_uuid',function(data){
+                qrcode.makeCode(`${location.href}render?session=${data}`)
+                console.log("session has been updated at the server")
+                
+            })
+
+            socket.on('new_ratings',function(data){
+                location.reload();
+            })
+
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+	width : 200,
+	height : 200
+});
+
+qrcode.makeCode(`${location.href}render?session=<%= info.value %>`)
+</script>
+</html>
